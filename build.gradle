@@ -1,0 +1,21 @@
+apply plugin: 'java-library'
+
+repositories {
+    jcenter()
+}
+
+ext {
+	guiceVersion = "4.2.0"
+ 	junitVersion = "4.12"
+ 	slf4jVersion = "1.7.25"
+    PUBLISH_GROUP_ID = 'com.gemengine.com'
+    PUBLISH_ARTIFACT_ID = 'gem-engine-core'
+    PUBLISH_VERSION = '0.1'
+}
+
+dependencies {
+    implementation "com.google.inject:guice:${guiceVersion}"
+    implementation "org.slf4j:slf4j-simple:${slf4jVersion}"
+    testImplementation "junit:junit:${junitVersion}"
+}
+
