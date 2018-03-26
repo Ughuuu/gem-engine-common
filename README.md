@@ -1,0 +1,1 @@
+[![Coverage Status](https://coveralls.io/repos/github/Ughuuu/gem-engine-common/badge.svg?branch=master)](https://coveralls.io/github/Ughuuu/gem-engine-common?branch=master)

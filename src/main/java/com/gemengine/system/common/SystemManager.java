@@ -55,14 +55,12 @@ public class SystemManager {
 		final Map<Class<?>, SystemBase> systemMap = new HashMap<>();
 		for(Class<? extends SystemBase> systemType : systemTypesSet) {
 			try {
-				if(!systemMap.containsKey(systemType)) {
-					injector.getInstance(systemType);
-				}
-				addInstances(systemMap);
+				SystemBase system = injector.getInstance(systemType);
 			} catch(Exception exception) {
 				logger.error("The following system {} failed to instantiate", systemType, exception);
 			}
 		}
+		addInstances(systemMap);
 		systemArray.clear();
 		systemArray.addAll(systemMap.values());
 		Collections.sort(systemArray);

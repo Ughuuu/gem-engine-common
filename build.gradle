@@ -19,3 +19,9 @@ dependencies {
     testImplementation "junit:junit:${junitVersion}"
 }
 
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+    }
+}
