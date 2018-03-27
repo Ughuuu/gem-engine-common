@@ -1,6 +1,7 @@
 package com.gemengine.system.common.dependency;
 
 public class SystemWithObjectInConstructor {
-	public SystemWithObjectInConstructor(Object object) {
+	public SystemWithObjectInConstructor(Object obj) {
+		
 	}
 }
