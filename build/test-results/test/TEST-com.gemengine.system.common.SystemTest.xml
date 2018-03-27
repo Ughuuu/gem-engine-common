@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.gemengine.system.common.SystemTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2018-03-27T17:48:25" hostname="dragos-pc" time="0.008">
-  <properties/>
-  <testcase name="checkSystemsAreOrdered" classname="com.gemengine.system.common.SystemTest" time="0.0"/>
-  <testcase name="checkSystemEnableState" classname="com.gemengine.system.common.SystemTest" time="0.008"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
