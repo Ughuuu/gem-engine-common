@@ -1,28 +1,18 @@
 package com.gemengine.system.common;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.ServiceLoader;
 import java.util.Set;
-import java.util.TreeSet;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Binding;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Key;
-import com.google.inject.spi.InstanceBinding;
 
 /**
  * 
@@ -31,58 +21,40 @@ import com.google.inject.spi.InstanceBinding;
  *
  */
 public class SystemManager {
+	private Injector injector = Guice.createInjector(new SystemInjectionModule());
 	private final Logger logger = LoggerFactory.getLogger(SystemManager.class);
-	private final Set<Class<? extends SystemBase>> systemTypesSet = new HashSet<>();
 	private final List<SystemBase> systemArray = new ArrayList<>();
-	private Injector injector;
+	private final Set<Class<? extends SystemBase>> systemTypesSet = new HashSet<>();
 
-	public void putSystemType(Class<? extends SystemBase> systemType) {
-		systemTypesSet.add(systemType);
+	public <T> T createComponent(Class<T> componentType) {
+		return injector.getInstance(componentType);
 	}
-	
-	public void removeSystemType(Class<? extends SystemBase> systemType) {
-		systemTypesSet.remove(systemType);
+
+	public List<SystemBase> getSystems() {
+		return Collections.unmodifiableList(systemArray);
 	}
-	
-	public void doOperation(Consumer<SystemBase> consumer) {
-		for (SystemBase system : systemArray) {
-			consumer.accept(system);
-        }
-	}
-	
+
 	public void instantiateSystems() {
-		injector = Guice.createInjector(new SystemInjectionModule(systemArray));
-		final Map<Class<?>, SystemBase> systemMap = new HashMap<>();
-		for(Class<? extends SystemBase> systemType : systemTypesSet) {
-			try {
-				SystemBase system = injector.getInstance(systemType);
-			} catch(Exception exception) {
-				logger.error("The following system {} failed to instantiate", systemType, exception);
-			}
+		try {
+			injector = Guice.createInjector(new SystemInjectionModule(systemTypesSet));
+		} catch (Exception exception) {
+			logger.error("The injector failed to create", exception);
+			return;
 		}
-		addInstances(systemMap);
 		systemArray.clear();
+		final Map<Class<?>, SystemBase> systemMap = new HashMap<>();
+		for (Class<? extends SystemBase> systemType : systemTypesSet) {
+			systemArray.add(injector.getInstance(systemType));
+		}
 		systemArray.addAll(systemMap.values());
 		Collections.sort(systemArray);
 	}
 
-	private void addInstances(Map<Class<?>, SystemBase> systemMap) {
-		for (Entry<Key<?>, Binding<?>> entry : injector.getAllBindings().entrySet()) {
-			Class<?> systemType = entry.getKey().getTypeLiteral().getRawType();
-			final Binding<?> value = entry.getValue();
-			if ((value instanceof InstanceBinding) &&
-					extendsType(systemType, SystemBase.class)) {
-				InstanceBinding<?> instanceBinding = (InstanceBinding<?>) value;
-				SystemBase systemInstance = (SystemBase) instanceBinding.getInstance();
-				systemMap.put(systemType, systemInstance);
-			}
-		}
+	public <T extends SystemBase> void putSystemType(Class<T> systemType) {
+		systemTypesSet.add(systemType);
 	}
 
-	private static boolean extendsType(Class<?> type, Class<?> extendsType) {
-		if (type == null || type.equals(Object.class)) {
-			return false;
-		}
-		return type.equals(extendsType) || extendsType(type.getSuperclass(), extendsType);
+	public <T extends SystemBase> void removeSystemType(Class<T> systemType) {
+		systemTypesSet.remove(systemType);
 	}
 }

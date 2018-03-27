@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SystemBase.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">gem-engine-common</a> &gt; <a href="index.source.html" class="el_package">com.gemengine.system.common</a> &gt; <span class="el_source">SystemBase.java</span></div><h1>SystemBase.java</h1><pre class="source lang-java linenums">package com.gemengine.system.common;
+
+/**
+ * The base system for all other systems. Implement this if you want a system
+ * with the basic events.
+ *
+ * @author Dragos
+ *
+ */
+public abstract class SystemBase implements Comparable&lt;SystemBase&gt; {
+	private boolean enable;
+
+	/**
+	 * The systems are called on their events based on their priorities.
+	 */
+	private final int priority;
+
+	/**
+	 * Create a system with priority as Integer.MAX_VALUE(will be called last).
+	 */
+	public SystemBase() {
+<span class="fc" id="L22">		this(true, Integer.MAX_VALUE);</span>
+<span class="fc" id="L23">	}</span>
+
+<span class="fc" id="L25">	public SystemBase(boolean enable, int priority) {</span>
+<span class="fc" id="L26">		this.enable = enable;</span>
+<span class="fc" id="L27">		this.priority = priority;</span>
+<span class="fc" id="L28">	}</span>
+
+	@Override
+	public int compareTo(SystemBase other) {
+<span class="fc bfc" id="L32" title="All 2 branches covered.">		if (this.getPriority() &lt; other.getPriority()) {</span>
+<span class="fc" id="L33">			return -1;</span>
+		}
+<span class="fc bfc" id="L35" title="All 2 branches covered.">		if (this.getPriority() &gt; other.getPriority()) {</span>
+<span class="fc" id="L36">			return 1;</span>
+		}
+<span class="fc" id="L38">		return getClass().toString().compareTo(other.getClass().toString());</span>
+	}
+
+	public int getPriority() {
+<span class="fc" id="L42">		return priority;</span>
+	}
+
+	public boolean isEnable() {
+<span class="fc" id="L46">		return enable;</span>
+	}
+
+	public void setEnable(boolean enable) {
+<span class="fc" id="L50">		this.enable = enable;</span>
+<span class="fc" id="L51">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.0.201801022044</span></div></body></html>

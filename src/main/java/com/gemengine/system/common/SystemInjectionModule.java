@@ -1,36 +1,25 @@
 package com.gemengine.system.common;
 
-import java.util.List;
-import java.util.Map.Entry;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Binding;
-import com.google.inject.Key;
-import com.google.inject.spi.InstanceBinding;
 
-public class SystemInjectionModule extends AbstractModule{
-	private final List<SystemBase> systemList;
-	
-	public SystemInjectionModule(List<SystemBase> systemList) {
+public class SystemInjectionModule extends AbstractModule {
+	private final Collection<Class<? extends SystemBase>> systemList;
+
+	public SystemInjectionModule() {
+		this(new ArrayList<>());
+	}
+
+	public SystemInjectionModule(Collection<Class<? extends SystemBase>> systemList) {
 		this.systemList = systemList;
 	}
 
 	@Override
 	protected void configure() {
-		for (SystemBase system : systemList) {
-			makeMapping(genericCast(system.getClass()), system);
+		for (Class<? extends Object> systemClass : systemList) {
+			bind(systemClass).asEagerSingleton();
 		}
-	}
-
-	private <T> void makeMapping(Class<T> systemClass, T system) {
-		bind(systemClass).toInstance(system);
-	}
-
-	@SuppressWarnings("unchecked")
-	private <T> Class<T> genericCast(Class<?> cls) {
-		return (Class<T>) cls;
 	}
 }

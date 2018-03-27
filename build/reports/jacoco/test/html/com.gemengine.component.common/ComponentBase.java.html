@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ComponentBase.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">gem-engine-common</a> &gt; <a href="index.source.html" class="el_package">com.gemengine.component.common</a> &gt; <span class="el_source">ComponentBase.java</span></div><h1>ComponentBase.java</h1><pre class="source lang-java linenums">package com.gemengine.component.common;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
+
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.SetMultimap;
+
+/**
+ * The basic ComponentBase type. This needs to be extended by components that
+ * will be used in the engine. Components hold data only, and the logic is
+ * performed by {@link com.gemengine.system.base.SystemBase} or others that
+ * extend that. If you need to do logic in the component,
+ * {@link com.google.inject.Inject} the component with a system.
+ *
+ */
+public abstract class ComponentBase {
+<span class="fc" id="L19">	private final SetMultimap&lt;Class&lt;? extends ComponentBase&gt;, ComponentBase&gt; children = HashMultimap.create();</span>
+	private boolean enable;
+	private ComponentBase parent;
+
+	public ComponentBase() {
+<span class="fc" id="L24">		this(true);</span>
+<span class="fc" id="L25">	}</span>
+
+<span class="fc" id="L27">	public ComponentBase(boolean enable) {</span>
+<span class="fc" id="L28">		this.enable = enable;</span>
+<span class="fc" id="L29">		parent = getRoot();</span>
+<span class="fc bfc" id="L30" title="All 2 branches covered.">		if(getRoot() != this) {</span>
+<span class="fc" id="L31">			getRoot().children.put(this.getClass(), this);</span>
+		}
+<span class="fc" id="L33">	}</span>
+
+	public void addChild(ComponentBase child) {
+<span class="fc" id="L36">		child.parent.children.remove(child.getClass(), child);</span>
+<span class="fc" id="L37">		children.put(child.getClass(), child);</span>
+<span class="fc" id="L38">		child.parent = this;</span>
+<span class="fc" id="L39">	}</span>
+
+	public ComponentBase getChild(Class&lt;? extends ComponentBase&gt; childType) {
+<span class="fc" id="L42">		Iterator&lt;ComponentBase&gt; componentIterator = children.get(childType).iterator();</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">		if (componentIterator.hasNext()) {</span>
+<span class="fc" id="L44">			return componentIterator.next();</span>
+		}
+<span class="fc" id="L46">		return null;</span>
+	}
+
+	public Collection&lt;ComponentBase&gt; getChildren() {
+<span class="fc" id="L50">		return children.values();</span>
+	}
+
+	public Set&lt;ComponentBase&gt; getChildren(Class&lt;? extends ComponentBase&gt; childType) {
+<span class="fc" id="L54">		return children.get(childType);</span>
+	}
+
+	public ComponentBase getParent() {
+<span class="fc" id="L58">		return parent;</span>
+	}
+
+	public abstract ComponentBase getRoot();
+
+	public boolean isEnable() {
+<span class="fc" id="L64">		return enable;</span>
+	}
+
+	public void removeChild(ComponentBase child) {
+<span class="fc" id="L68">		children.remove(child.getClass(), child);</span>
+<span class="fc" id="L69">		child.setParent(getRoot());</span>
+<span class="fc" id="L70">	}</span>
+
+	public void removeChildren(Class&lt;? extends ComponentBase&gt; childType) {
+<span class="fc" id="L73">		Set&lt;ComponentBase&gt; typeChildren = children.get(childType);</span>
+<span class="fc" id="L74">		children.remove(childType, children);</span>
+<span class="fc" id="L75">		typeChildren.stream().forEach((child) -&gt; child.setParent(getRoot()));</span>
+<span class="fc" id="L76">	}</span>
+
+	public void removeParent() {
+<span class="fc" id="L79">		parent.removeChild(this);</span>
+<span class="fc" id="L80">	}</span>
+
+	public void setEnable(boolean enable) {
+<span class="fc" id="L83">		this.enable = enable;</span>
+<span class="fc" id="L84">	}</span>
+
+	public void setParent(ComponentBase parent) {
+<span class="fc bfc" id="L87" title="All 2 branches covered.">		if (parent == null) {</span>
+<span class="fc" id="L88">			getRoot().addChild(this);</span>
+		} else {
+<span class="fc" id="L90">			parent.addChild(this);</span>
+		}
+<span class="fc" id="L92">	}</span>
+	
+	public void remove() {
+<span class="fc" id="L95">		parent.children.remove(this.getClass(), this);</span>
+<span class="fc" id="L96">		getChildren().stream().forEach(component -&gt; component.parent = getRoot());</span>
+<span class="fc" id="L97">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.0.201801022044</span></div></body></html>
