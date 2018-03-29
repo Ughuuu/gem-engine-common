@@ -10,9 +10,8 @@ import com.google.common.collect.SetMultimap;
 /**
  * The basic ComponentBase type. This needs to be extended by components that
  * will be used in the engine. Components hold data only, and the logic is
- * performed by {@link com.gemengine.system.base.SystemBase} or others that
- * extend that. If you need to do logic in the component,
- * {@link com.google.inject.Inject} the component with a system.
+ * performed by {@link com.gemengine.system.common.SystemBase} or others that
+ * extend that.
  *
  */
 public abstract class ComponentBase {
@@ -64,6 +63,11 @@ public abstract class ComponentBase {
 		return enable;
 	}
 
+	public void remove() {
+		parent.children.remove(this.getClass(), this);
+		getChildren().stream().forEach(component -> component.parent = getRoot());
+	}
+
 	public void removeChild(ComponentBase child) {
 		children.remove(child.getClass(), child);
 		child.setParent(getRoot());
@@ -89,10 +93,5 @@ public abstract class ComponentBase {
 		} else {
 			parent.addChild(this);
 		}
-	}
-
-	public void remove() {
-		parent.children.remove(this.getClass(), this);
-		getChildren().stream().forEach(component -> component.parent = getRoot());
 	}
 }

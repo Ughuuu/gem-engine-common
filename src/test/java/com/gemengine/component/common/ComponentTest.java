@@ -25,22 +25,6 @@ public class ComponentTest {
 	}
 
 	@Test
-	public void rootComponentTest() {
-		SystemManager systemManager = new SystemManager();
-		ComponentWithoutDependency child = systemManager.createComponent(ComponentWithoutDependency.class);
-		ComponentWithoutDependency parent = systemManager.createComponent(ComponentWithoutDependency.class);
-		assertEquals("Child is connected to root component", ComponentRootTest.getInstance(), child.getParent());
-		assertEquals("Parent is connected to root component", ComponentRootTest.getInstance(), parent.getParent());
-		assertTrue("The root component has as child the Parent component",
-				ComponentRootTest.getInstance().getChildren(ComponentWithoutDependency.class).contains(child));
-		assertTrue("The root component has as child the Parent component",
-				ComponentRootTest.getInstance().getChildren(ComponentWithoutDependency.class).contains(parent));
-		child.remove();
-		parent.remove();
-		assertEquals("The root component has no children", 0, ComponentRootTest.getInstance().getChildren().size());
-	}
-
-	@Test
 	public void componentRemoveChildrenTest() {
 		SystemManager systemManager = new SystemManager();
 		ComponentWithoutDependency child = systemManager.createComponent(ComponentWithoutDependency.class);
@@ -85,6 +69,22 @@ public class ComponentTest {
 		assertEquals("Check component injected correctly", systemExample, componentWithDependency.getSystemExample());
 
 		componentWithDependency.remove();
+		assertEquals("The root component has no children", 0, ComponentRootTest.getInstance().getChildren().size());
+	}
+
+	@Test
+	public void rootComponentTest() {
+		SystemManager systemManager = new SystemManager();
+		ComponentWithoutDependency child = systemManager.createComponent(ComponentWithoutDependency.class);
+		ComponentWithoutDependency parent = systemManager.createComponent(ComponentWithoutDependency.class);
+		assertEquals("Child is connected to root component", ComponentRootTest.getInstance(), child.getParent());
+		assertEquals("Parent is connected to root component", ComponentRootTest.getInstance(), parent.getParent());
+		assertTrue("The root component has as child the Parent component",
+				ComponentRootTest.getInstance().getChildren(ComponentWithoutDependency.class).contains(child));
+		assertTrue("The root component has as child the Parent component",
+				ComponentRootTest.getInstance().getChildren(ComponentWithoutDependency.class).contains(parent));
+		child.remove();
+		parent.remove();
 		assertEquals("The root component has no children", 0, ComponentRootTest.getInstance().getChildren().size());
 	}
 }
