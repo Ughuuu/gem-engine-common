@@ -20,8 +20,8 @@ ext {
 	guiceVersion = "4.2.0"
  	junitVersion = "4.12"
  	slf4jVersion = "1.7.25"
-    PUBLISH_GROUP_ID = 'com.gemengine.com'
-    PUBLISH_ARTIFACT_ID = 'gem-engine-core'
+    PUBLISH_GROUP_ID = 'com.gemengine.common'
+    PUBLISH_ARTIFACT_ID = 'gem-engine-common'
     PUBLISH_VERSION = '0.1'
 }
 

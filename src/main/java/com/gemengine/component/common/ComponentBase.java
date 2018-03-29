@@ -27,7 +27,7 @@ public abstract class ComponentBase {
 	public ComponentBase(boolean enable) {
 		this.enable = enable;
 		parent = getRoot();
-		if(getRoot() != this) {
+		if (getRoot() != this) {
 			getRoot().children.put(this.getClass(), this);
 		}
 	}
@@ -90,7 +90,7 @@ public abstract class ComponentBase {
 			parent.addChild(this);
 		}
 	}
-	
+
 	public void remove() {
 		parent.children.remove(this.getClass(), this);
 		getChildren().stream().forEach(component -> component.parent = getRoot());
