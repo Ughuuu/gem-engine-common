@@ -8,6 +8,7 @@ deploy:
   api_key:
     secure: iyTePGXNg474PQK1gGcv2/bXzgL+OG9siXFuYhsMwIP4uZ2ZZL9YYhuN09bnaIm+Y9jCJUJ5Ix1ymjC8iAUFWfhbnu4detvn+fB+ipc/cumHtgunz03atZdfbsBWhKFYmwzOd6qdjmkZByCGaalYwmN3vI3X9+xE/oDvqsNo6fRQAzxAKb/kjvVAsy5UJY3H+YLDrsp+jlqqNTcYCtac50Qj5KMW8D7Sw38HCMSH+umQFOVHH7tdTZv4dZ7TRa66qodOa6hmUHiMEux9yGSeClSKdgl3OLrO45k2yuXU2tvg5tBW+BsIXR2okt78fk+VW1nurvHzKI+TiL/oRW6dNljKU3EJ1SsleDeL5VewbP2oCIX+ImhBNnekOcWU4q1wPtgtGCAnMiigtqiJ9EMGYCD8l4kZCvgbtoztX5wOU8vyctJcxjkjWIj9nlFBHVxhy1z8gysf3Srp/v0jTU9jyRFt+EFspkGGuBRV6M37no2f8GbjfpUmttWJsA/ZNO2gxQDjgb7wyds3C2gCQ/FdZZbEpFAaSuzAQFtPPX2gCIqqEbMzMeh/1lMr633yi27dLaeyT3dMGmOOXHxjWLfvqgAr4jxmbeIab2c/jqczJspBO6XQX1wAjQRqJKGT7w4E4+OuC44BJjddPib6GhIA7hySacfsA264kd1e60pT+/0=
   file: build/libs/gem-engine-common.jar
+  skip_cleanup: true
   on:
     repo: Ughuuu/gem-engine-common
     tags: true
