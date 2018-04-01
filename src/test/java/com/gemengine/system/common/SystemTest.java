@@ -8,6 +8,24 @@ import org.junit.Test;
 
 public class SystemTest {
 	@Test
+	public void testNamedProperty() {
+		SystemManager systemManager = new SystemManager();
+		systemManager.putSystemType(SystemWithNamedDependency.class);
+		systemManager.putNamedProperty("testNumber", 5);
+		systemManager.instantiateSystems();
+		SystemWithNamedDependency systemWithNamedDependency = (SystemWithNamedDependency) systemManager.getSystems().get(0);
+		assertEquals("Check the named dependency is correct", 5, systemWithNamedDependency.getTestNumber());		
+	}
+	@Test
+	public void checkTimedSystem() {
+		SystemManager systemManager = new SystemManager();
+		systemManager.putSystemType(TimedSystemTest.class);
+		systemManager.instantiateSystems();
+		TimedSystemTest timedSysetm = (TimedSystemTest) systemManager.getSystems().get(0);
+		assertEquals("Check interval is the correct one", 16.0f, timedSysetm.getInterval(), 0.01f);
+	}
+	
+	@Test
 	public void checkSystemEnableState() {
 		SystemManager systemManager = new SystemManager();
 		systemManager.putSystemType(SystemWithPriorityZero.class);

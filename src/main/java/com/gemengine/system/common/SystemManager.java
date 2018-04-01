@@ -23,6 +23,7 @@ import com.google.inject.Injector;
 public class SystemManager {
 	private Injector injector = Guice.createInjector(new SystemInjectionModule());
 	private final Logger logger = LoggerFactory.getLogger(SystemManager.class);
+	private final Map<String, Object> properties = new HashMap<>();
 	private final List<SystemBase> systemArray = new ArrayList<>();
 	private final Set<Class<? extends SystemBase>> systemTypesSet = new HashSet<>();
 
@@ -36,7 +37,7 @@ public class SystemManager {
 
 	public void instantiateSystems() {
 		try {
-			injector = Guice.createInjector(new SystemInjectionModule(systemTypesSet));
+			injector = Guice.createInjector(new SystemInjectionModule(systemTypesSet, properties));
 		} catch (Exception exception) {
 			logger.error("The injector failed to create", exception);
 			return;
@@ -48,6 +49,10 @@ public class SystemManager {
 		}
 		systemArray.addAll(systemMap.values());
 		Collections.sort(systemArray);
+	}
+	
+	public <T extends Object> void putNamedProperty(String name, T property) {
+		properties.put(name, property);
 	}
 
 	public <T extends SystemBase> void putSystemType(Class<T> systemType) {
