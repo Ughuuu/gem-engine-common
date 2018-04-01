@@ -26,16 +26,13 @@ public class SystemInjectionModule extends AbstractModule {
 		for (Class<? extends Object> systemClass : systemList) {
 			bind(systemClass).asEagerSingleton();
 		}
-		for(Map.Entry<String, Object> propertyEntry : properties.entrySet()) {
-			Object value = propertyEntry.getValue();
+		for (Map.Entry<String, Object> propertyEntry : properties.entrySet()) {
 			setNamedBinding(propertyEntry.getKey(), propertyEntry.getValue());
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private <T> void setNamedBinding(String key, T object){
-		bind((Class<T>)object.getClass())
-        .annotatedWith(Names.named(key))
-        .toInstance(object);
+	private <T> void setNamedBinding(String key, T object) {
+		bind((Class<T>) object.getClass()).annotatedWith(Names.named(key)).toInstance(object);
 	}
 }

@@ -50,7 +50,7 @@ public class SystemManager {
 		systemArray.addAll(systemMap.values());
 		Collections.sort(systemArray);
 	}
-	
+
 	public <T extends Object> void putNamedProperty(String name, T property) {
 		properties.put(name, property);
 	}

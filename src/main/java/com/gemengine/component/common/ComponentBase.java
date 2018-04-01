@@ -76,7 +76,7 @@ public abstract class ComponentBase {
 	public void removeChildren(Class<? extends ComponentBase> childType) {
 		Set<ComponentBase> typeChildren = children.get(childType);
 		children.remove(childType, children);
-		typeChildren.stream().forEach((child) -> child.setParent(getRoot()));
+		typeChildren.stream().forEach(child -> child.setParent(getRoot()));
 	}
 
 	public void removeParent() {
