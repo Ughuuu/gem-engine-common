@@ -14,50 +14,45 @@ import com.google.common.collect.SetMultimap;
  * extend that.
  *
  */
-public abstract class ComponentBase {
-	private final SetMultimap<Class<? extends ComponentBase>, ComponentBase> children = HashMultimap.create();
+public abstract class BaseComponent {
+	private final SetMultimap<Class<? extends BaseComponent>, BaseComponent> children = HashMultimap.create();
 	private boolean enable;
-	private ComponentBase parent;
+	private BaseComponent parent;
+	private final static ComponentRoot ROOT_COMPONENT = ComponentRoot.getInstance();
 
-	public ComponentBase() {
-		this(true);
-	}
-
-	public ComponentBase(boolean enable) {
+	protected ComponentBase(boolean enable) {
 		this.enable = enable;
-		parent = getRoot();
-		if (getRoot() != this) {
-			getRoot().children.put(this.getClass(), this);
+		parent = ROOT_COMPONENT;
+		if (ROOT_COMPONENT != parent) {
+			ROOT_COMPONENT.addChild(this);
 		}
 	}
 
-	public void addChild(ComponentBase child) {
+	public void addChild(BaseComponent child) {
 		child.parent.children.remove(child.getClass(), child);
 		children.put(child.getClass(), child);
 		child.parent = this;
 	}
 
-	public ComponentBase getChild(Class<? extends ComponentBase> childType) {
-		Iterator<ComponentBase> componentIterator = children.get(childType).iterator();
+	public BaseComponent getChild(Class<? extends BaseComponent> childType) {
+		Iterator<BaseComponent> componentIterator = children.get(childType).iterator();
 		if (componentIterator.hasNext()) {
 			return componentIterator.next();
 		}
 		return null;
 	}
 
-	public Collection<ComponentBase> getChildren() {
+	public Collection<BaseComponent> getChildren() {
 		return children.values();
 	}
 
-	public Set<ComponentBase> getChildren(Class<? extends ComponentBase> childType) {
+	public Set<BaseComponent> getChildren(Class<? extends BaseComponent> childType) {
 		return children.get(childType);
 	}
 
-	public ComponentBase getParent() {
+	public BaseComponent getParent() {
 		return parent;
 	}
-
-	public abstract ComponentBase getRoot();
 
 	public boolean isEnable() {
 		return enable;
@@ -65,18 +60,18 @@ public abstract class ComponentBase {
 
 	public void remove() {
 		parent.children.remove(this.getClass(), this);
-		getChildren().stream().forEach(component -> component.parent = getRoot());
+		getChildren().stream().forEach(component -> component.parent = ROOT_COMPONENT);
 	}
 
-	public void removeChild(ComponentBase child) {
+	public void removeChild(BaseComponent child) {
 		children.remove(child.getClass(), child);
-		child.setParent(getRoot());
+		child.setParent(ROOT_COMPONENT);
 	}
 
-	public void removeChildren(Class<? extends ComponentBase> childType) {
-		Set<ComponentBase> typeChildren = children.get(childType);
+	public void removeChildren(Class<? extends BaseComponent> childType) {
+		Set<BaseComponent> typeChildren = children.get(childType);
 		children.remove(childType, children);
-		typeChildren.stream().forEach(child -> child.setParent(getRoot()));
+		typeChildren.stream().forEach(child -> child.setParent(ROOT_COMPONENT));
 	}
 
 	public void removeParent() {
@@ -87,9 +82,9 @@ public abstract class ComponentBase {
 		this.enable = enable;
 	}
 
-	public void setParent(ComponentBase parent) {
+	public void setParent(BaseComponent parent) {
 		if (parent == null) {
-			getRoot().addChild(this);
+			ROOT_COMPONENT.addChild(this);
 		} else {
 			parent.addChild(this);
 		}
